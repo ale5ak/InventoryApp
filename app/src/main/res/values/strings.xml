@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">InventoryApp</string>
+    <string name="price">Price: $%1$d</string>
+    <string name="quantity">Quantity: %1$d</string>
+    <string name="button_sale_label">Sale</string>
+    <string name="row_updated_sale">You just sold the %1$s.</string>
+    <string name="row_updated_edit">Saved successfully.</string>
+    <string name="row_added">You just added the %1$s.</string>
+    <string name="row_deleted">You just sold the last %1$s.</string>
+    <string name="product_deleted">You just deleted the %1$s.</string>
+    <string name="tv_detail_title">Title:</string>
+    <string name="tv_detail_price">Price:</string>
+    <string name="tv_detail_material">Material:</string>
+    <string name="tv_detail_quantity">Quantity:</string>
+    <string name="bt_detail_minus_sign">-</string>
+    <string name="bt_detail_plus_sign">+</string>
+    <string name="bt_detail_order">Order from the supplier</string>
+    <string name="bt_detail_delete">Delete</string>
+    <string name="bt_detail_save">Save</string>
+    <string name="error_quantity_bigger_than_0">The quantity must be larger than 0.</string>
+    <string name="error_all_fields_must_be_filled">Please, fill up all the fields to continue.</string>
+    <string name="order_text">
+        Hi,
+        \n\nI would like to order this item: %1$s
+        \nfrom this material: %2$s
+        \nat this quantity: %3$s.
+        \nDoes it still cost $%4$s per item?
+        \n\nThanks.
+    </string>
+    <string name="order_subject">Order</string>
+    <string name="one">1</string>
+</resources>
