@@ -144,7 +144,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         String[] values = getValues();
         if (values == null) return;
         if (mImageUri == null) {
-            Toast.makeText(this, getString(R.string.error_no_image), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_no_image), Toast.LENGTH_LONG).show();
             return;
         }
 

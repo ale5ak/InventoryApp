@@ -9,7 +9,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="24dp">
 
         <ImageView
             android:id="@+id/iv_detail_image"
@@ -102,6 +103,7 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:inputType="textShortMessage"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toRightOf="@+id/tv_detail_quantity"
                 app:layout_constraintRight_toRightOf="parent"
@@ -131,6 +133,7 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="15dp"
+                android:inputType="textShortMessage"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toRightOf="@+id/tv_detail_quantity"
                 app:layout_constraintRight_toRightOf="parent"
@@ -188,13 +191,11 @@
                 android:id="@+id/bt_detail_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
                 android:onClick="deleteProduct"
                 android:text="@string/bt_detail_delete"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/bt_detail_order" />
 
@@ -202,13 +203,11 @@
                 android:id="@+id/bt_detail_save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="24dp"
                 android:onClick="saveProduct"
                 android:text="@string/bt_detail_save"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/bt_detail_order" />
         </android.support.constraint.ConstraintLayout>
