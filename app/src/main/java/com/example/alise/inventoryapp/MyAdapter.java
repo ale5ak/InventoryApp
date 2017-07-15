@@ -1,20 +1,16 @@
 package com.example.alise.inventoryapp;
 
-import android.content.AsyncQueryHandler;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.alise.inventoryapp.data.InventoryContract;
 import com.example.alise.inventoryapp.data.MyAsyncQueryHandler;
@@ -108,7 +104,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             mItemTitleTV = v.findViewById(R.id.tv_item_title);
             mItemPriceTV = v.findViewById(R.id.tv_item_price);
             mItemtQuantityTV = v.findViewById(R.id.tv_item_quantity);
-            mSaleButton = v.findViewById(R.id.button_sale);
+            mSaleButton = v.findViewById(R.id.bt_sale);
         }
     }
 

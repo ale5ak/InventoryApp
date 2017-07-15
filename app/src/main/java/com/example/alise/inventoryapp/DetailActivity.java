@@ -1,12 +1,14 @@
 package com.example.alise.inventoryapp;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -44,6 +46,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             getSupportLoaderManager().initLoader(0, null, this);
         } else {
             mIsNewProduct = true;
+            findViewById(R.id.bt_detail_delete).setVisibility(View.GONE);
         }
 
         mIdLabelTV = (TextView) findViewById(R.id.tv_detail_id_label);
@@ -92,8 +95,19 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     public void deleteProduct(View view) {
-        if (!mIsNewProduct) mMyAsyncQueryHandler.startDelete(1, mTitleET.getText().toString(), mUri, null, null);
-        finish();
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setMessage(getString(R.string.delete_confirmation_dialog_message));
+
+        alert.setPositiveButton(getString(R.string.delete_confirmation_dialog_yes), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mMyAsyncQueryHandler.startDelete(1, mTitleET.getText().toString(), mUri, null, null);
+                finish();
+            }
+        });
+
+        alert.setNegativeButton(getString(R.string.delete_confirmation_dialog_no), null);
+        alert.show();
     }
 
     public void saveProduct(View view) {

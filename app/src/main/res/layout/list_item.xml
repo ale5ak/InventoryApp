@@ -56,7 +56,7 @@
             android:layout_marginBottom="16dp" />
 
         <Button
-            android:id="@+id/button_sale"
+            android:id="@+id/bt_sale"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="8dp"

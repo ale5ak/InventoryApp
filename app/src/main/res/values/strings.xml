@@ -30,4 +30,7 @@
     <string name="order_subject">Order</string>
     <string name="one">1</string>
     <string name="tv_detail_identifier">ID:</string>
+    <string name="delete_confirmation_dialog_message">Are you sure you want to delete this product?</string>
+    <string name="delete_confirmation_dialog_yes">YES</string>
+    <string name="delete_confirmation_dialog_no">NO</string>
 </resources>
