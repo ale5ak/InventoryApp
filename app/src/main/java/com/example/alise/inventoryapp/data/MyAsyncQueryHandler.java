@@ -32,20 +32,24 @@ public class MyAsyncQueryHandler extends AsyncQueryHandler {
     @Override
     protected void onUpdateComplete(int token, Object cookie, int result) {
         //super.onUpdateComplete(token, cookie, result);
-        if (token == 0) {
-            Toast.makeText(mContext, mContext.getString(R.string.row_updated_sale, cookie), Toast.LENGTH_SHORT).show();
-        } else if (token == 1) {
-            Toast.makeText(mContext, mContext.getString(R.string.row_updated_edit), Toast.LENGTH_SHORT).show();
+        if (result > 0) {
+            if (token == 0) {
+                Toast.makeText(mContext, mContext.getString(R.string.row_updated_sale, cookie), Toast.LENGTH_SHORT).show();
+            } else if (token == 1) {
+                Toast.makeText(mContext, mContext.getString(R.string.row_updated_edit), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
     @Override
     protected void onDeleteComplete(int token, Object cookie, int result) {
         //super.onDeleteComplete(token, cookie, result);
-        if (token == 0) {
-            Toast.makeText(mContext, mContext.getString(R.string.row_deleted, cookie), Toast.LENGTH_SHORT).show();
-        } else if (token == 1) {
-            Toast.makeText(mContext, mContext.getString(R.string.product_deleted, cookie), Toast.LENGTH_SHORT).show();
+        if (result > 0) {
+            if (token == 0) {
+                Toast.makeText(mContext, mContext.getString(R.string.row_deleted, cookie), Toast.LENGTH_SHORT).show();
+            } else if (token == 1) {
+                Toast.makeText(mContext, mContext.getString(R.string.product_deleted, cookie), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

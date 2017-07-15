@@ -85,8 +85,6 @@ public class InventoryProvider extends ContentProvider {
                 // If the URI is not recognized, you should do some error handling here.
                 throw new Error("Unknown uri");
         }
-
-
     }
 
     @Nullable
