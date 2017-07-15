@@ -35,4 +35,5 @@
     <string name="delete_confirmation_dialog_no">NO</string>
     <string name="empty_view_label">There is no data yet. You can start by clicking the add button in the bottom right corner.</string>
     <string name="permission_external_storage_write">Permission to write to your external storage denied.</string>
+    <string name="error_no_image">Please take a photo of the product and then click save.</string>
 </resources>

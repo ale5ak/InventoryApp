@@ -8,13 +8,14 @@ import android.provider.BaseColumns;
  */
 
 public final class InventoryContract {
-    // To prevent someone from accidentally instantiating the contract class,
-    // make the constructor private.
-    private InventoryContract() {}
-
     public static final String AUTHORITY = "com.example.alise.inventoryapp"; //authority == provider name
     public static final String PATH_PRODUCTS = "products";
     public static final Uri BASE_URI = Uri.parse("content://" + AUTHORITY);
+
+    // To prevent someone from accidentally instantiating the contract class,
+    // make the constructor private.
+    private InventoryContract() {
+    }
 
     /* Inner class that defines the table contents */
     public static class ProductEntry implements BaseColumns {
@@ -24,6 +25,7 @@ public final class InventoryContract {
         public static final String COLUMN_NAME_PRICE = "price";
         public static final String COLUMN_NAME_MATERIAL = "material";
         public static final String COLUMN_NAME_QUANTITY = "quantity";
+        public static final String COLUMN_NAME_IMAGE = "image";
 
     }
 }

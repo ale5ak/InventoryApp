@@ -46,7 +46,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     private MyAsyncQueryHandler mMyAsyncQueryHandler;
     private Uri mUri;
     private boolean mIsNewProduct;
-    private Uri mPhotoUri;
+    private Uri mImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +143,10 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     public void saveProduct(View view) {
         String[] values = getValues();
         if (values == null) return;
+        if (mImageUri == null) {
+            Toast.makeText(this, getString(R.string.error_no_image), Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         int price = Integer.parseInt(values[1]);
         int quantity = Integer.parseInt(values[3]);
@@ -152,6 +156,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         contentValues.put(InventoryContract.ProductEntry.COLUMN_NAME_PRICE, price);
         contentValues.put(InventoryContract.ProductEntry.COLUMN_NAME_MATERIAL, values[2]);
         contentValues.put(InventoryContract.ProductEntry.COLUMN_NAME_QUANTITY, quantity);
+        contentValues.put(InventoryContract.ProductEntry.COLUMN_NAME_IMAGE, mImageUri.toString());
 
         if (mIsNewProduct) {
             mMyAsyncQueryHandler.startInsert(0, values[0], InventoryContract.ProductEntry.PRODUCTS_URI, contentValues);
@@ -197,6 +202,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             String price = data.getString(data.getColumnIndexOrThrow(InventoryContract.ProductEntry.COLUMN_NAME_PRICE));
             String material = data.getString(data.getColumnIndexOrThrow(InventoryContract.ProductEntry.COLUMN_NAME_MATERIAL));
             String quantity = data.getString(data.getColumnIndexOrThrow(InventoryContract.ProductEntry.COLUMN_NAME_QUANTITY));
+            String imageUri = data.getString(data.getColumnIndexOrThrow(InventoryContract.ProductEntry.COLUMN_NAME_IMAGE));
 
             mIdLabelTV.setVisibility(View.VISIBLE);
             mIdValueTV.setText(id);
@@ -208,6 +214,9 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             mQuantityET.setText(quantity);
 
             mQuantityInt = Integer.parseInt(quantity);
+
+            mImageUri = Uri.parse(imageUri);
+            mProductImageIV.setImageURI(mImageUri);
         }
 
         data.close();
@@ -215,13 +224,12 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            mProductImageIV.setImageURI(mPhotoUri);
+            mProductImageIV.setImageURI(mImageUri);
         }
     }
 
@@ -242,7 +250,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         );
 
         // Save a file: uri
-        mPhotoUri = Uri.fromFile(image);
+        mImageUri = Uri.fromFile(image);
         return image;
     }
 
@@ -263,7 +271,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoUri);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
         }
@@ -300,7 +308,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         }
     }
 
-    public class MyTextWatcher implements TextWatcher{
+    private class MyTextWatcher implements TextWatcher {
 
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}

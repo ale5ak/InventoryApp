@@ -12,7 +12,7 @@ import com.example.alise.inventoryapp.data.InventoryContract.ProductEntry;
 
 public class InventoryDbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 5;
     public static final String DATABASE_NAME = "Inventory.db";
 
     private static final String SQL_CREATE_ENTRIES =
@@ -23,7 +23,8 @@ public class InventoryDbHelper extends SQLiteOpenHelper {
                     ProductEntry.COLUMN_NAME_TITLE +        " TEXT NOT NULL," +
                     ProductEntry.COLUMN_NAME_PRICE +        " INT NOT NULL," +
                     ProductEntry.COLUMN_NAME_MATERIAL +     " TEXT NOT NULL," +
-                    ProductEntry.COLUMN_NAME_QUANTITY +     " INT NOT NULL)";
+                    ProductEntry.COLUMN_NAME_QUANTITY + " INT NOT NULL," +
+                    ProductEntry.COLUMN_NAME_IMAGE + " TEXT NOT NULL)";
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + ProductEntry.TABLE_NAME;
