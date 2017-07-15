@@ -38,15 +38,31 @@ import java.util.Date;
 
 public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     static final int REQUEST_TAKE_PHOTO = 1;
+
     private ImageView mProductImageIV;
     private TextView mIdLabelTV, mIdValueTV;
     private EditText mTitleET, mPriceET, mMaterialET, mQuantityET;
+
     private int mQuantityInt;
     private Toast errorQuantityBiggerThan1;
+
     private MyAsyncQueryHandler mMyAsyncQueryHandler;
-    private Uri mUri;
+    private Uri mProductItemUri;
+
+    //mInitialImageUri is the uri for the image when we open DetailActivity by clicking on the item on the recycler view
+    // from MainActivity)
+
+    //mImageUri is the uri for the last image that was just properly taken with the camera
+
+    //mTempImageUri is the uri for the image that we just started writing to by trying to take a photo
+    //(after the photo is correctly taken we copy its value to the mImageUri
+    private Uri mInitialImageUri, mImageUri, mTempImageUri;
+
+    //this helps us to determine what images we should delete and what images are being still used by the app
     private boolean mIsNewProduct;
-    private Uri mImageUri, mTempImageUri;
+    private boolean mDbWasChanged = false;
+    private boolean mShouldDeleteImage = false;
+    private boolean mShouldDeleteInitialImage = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +76,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
         if (id != -1) {
             mIsNewProduct = false;
-            mUri = InventoryContract.ProductEntry.PRODUCTS_URI.buildUpon().appendPath(String.valueOf(id)).build();
+            mProductItemUri = InventoryContract.ProductEntry.PRODUCTS_URI.buildUpon().appendPath(String.valueOf(id)).build();
             getSupportLoaderManager().initLoader(0, null, this);
         } else {
             mIsNewProduct = true;
@@ -131,7 +147,11 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         alert.setPositiveButton(getString(R.string.delete_confirmation_dialog_yes), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                mMyAsyncQueryHandler.startDelete(1, mTitleET.getText().toString(), mUri, null, null);
+                mMyAsyncQueryHandler.startDelete(1, mTitleET.getText().toString(), mProductItemUri, null, null);
+                mDbWasChanged = true;
+
+                //we don't need to delete the initialImage, because provider will do that, so delete only image
+                if (mImageUri != null) mShouldDeleteImage = true;
                 finish();
             }
         });
@@ -140,12 +160,46 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         alert.show();
     }
 
+    //here we check what images are still going to be used by the app and we delete the other images
+    @Override
+    protected void onDestroy() {
+        //if the database was changed
+        // -> the methods changed the values for mShouldDeleteImage and mShouldDeleteInitialImage
+        // -> so act based on those values
+        if (mDbWasChanged) {
+            if (mShouldDeleteImage) new File(mImageUri.getPath()).delete();
+            if (mShouldDeleteInitialImage) new File(mInitialImageUri.getPath()).delete();
+        } else {
+            //if it is new product and we are not saving it -> delete everything we can
+            if (mIsNewProduct) {
+                if (mImageUri != null) new File(mImageUri.getPath()).delete();
+                if (mInitialImageUri != null) new File(mInitialImageUri.getPath()).delete();
+            }
+            //if it isn't new product and we are not saving it or removing it -> delete everything except the
+            //picture for this product that we are already using in the database
+            if (!mIsNewProduct) {
+                if (mImageUri != null) new File(mImageUri.getPath()).delete();
+            }
+        }
+        super.onDestroy();
+    }
+
     public void saveProduct(View view) {
         String[] values = getValues();
         if (values == null) return;
-        if (mImageUri == null) {
+        if (mImageUri == null && mInitialImageUri == null) {
             Toast.makeText(this, getString(R.string.error_no_image), Toast.LENGTH_LONG).show();
             return;
+        }
+
+        String imageUri = null;
+        if (mImageUri == null) {
+            imageUri = mInitialImageUri.toString();
+        }
+
+        if (mImageUri != null) {
+            imageUri = mImageUri.toString();
+            if (mInitialImageUri != null) mShouldDeleteInitialImage = true;
         }
 
         int price = Integer.parseInt(values[1]);
@@ -156,14 +210,15 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         contentValues.put(InventoryContract.ProductEntry.COLUMN_NAME_PRICE, price);
         contentValues.put(InventoryContract.ProductEntry.COLUMN_NAME_MATERIAL, values[2]);
         contentValues.put(InventoryContract.ProductEntry.COLUMN_NAME_QUANTITY, quantity);
-        contentValues.put(InventoryContract.ProductEntry.COLUMN_NAME_IMAGE, mImageUri.toString());
+        contentValues.put(InventoryContract.ProductEntry.COLUMN_NAME_IMAGE, imageUri);
 
         if (mIsNewProduct) {
             mMyAsyncQueryHandler.startInsert(0, values[0], InventoryContract.ProductEntry.PRODUCTS_URI, contentValues);
         } else {
-            mMyAsyncQueryHandler.startUpdate(1, null, mUri, contentValues, null, null);
+            mMyAsyncQueryHandler.startUpdate(1, null, mProductItemUri, contentValues, null, null);
         }
 
+        mDbWasChanged = true;
         finish();
     }
 
@@ -191,7 +246,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(this, mUri, null, null, null, null);
+        return new CursorLoader(this, mProductItemUri, null, null, null, null);
     }
 
     @Override
@@ -215,8 +270,8 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
             mQuantityInt = Integer.parseInt(quantity);
 
-            mImageUri = Uri.parse(imageUri);
-            mProductImageIV.setImageURI(mImageUri);
+            mInitialImageUri = Uri.parse(imageUri);
+            mProductImageIV.setImageURI(mInitialImageUri);
         }
 
         data.close();
@@ -226,11 +281,21 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     public void onLoaderReset(Loader<Cursor> loader) {
     }
 
+    //this method is called after the picture from the camera is taken
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+
+            //if we are replacing the image we can delete the old image
+            if (mImageUri != null) {
+                new File(mImageUri.getPath()).delete();
+            }
+
             mImageUri = mTempImageUri;
             mProductImageIV.setImageURI(mImageUri);
+        } else {
+            //if something went wrong delete the empty file
+            new File(mTempImageUri.getPath()).delete();
         }
     }
 

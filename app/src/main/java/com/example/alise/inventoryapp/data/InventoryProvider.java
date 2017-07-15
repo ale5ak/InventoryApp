@@ -1,29 +1,23 @@
 package com.example.alise.inventoryapp.data;
 
-import com.example.alise.inventoryapp.data.InventoryContract.ProductEntry;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
-import android.util.Log;
+
+import com.example.alise.inventoryapp.data.InventoryContract.ProductEntry;
+
+import java.io.File;
 
 /**
  * Created by Aleš Pros on 13.07.2017.
  */
 
 public class InventoryProvider extends ContentProvider {
-
-    /*
-    * Defines a handle to the database helper object. The MainDatabaseHelper class is defined
-    * in a following snippet.
-    */
-    private InventoryDbHelper mOpenHelper;
 
     // Creates a UriMatcher object.
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -47,6 +41,12 @@ public class InventoryProvider extends ContentProvider {
          */
         sUriMatcher.addURI(InventoryContract.AUTHORITY, InventoryContract.PATH_PRODUCTS + "/#", 2);
     }
+
+    /*
+    * Defines a handle to the database helper object. The MainDatabaseHelper class is defined
+    * in a following snippet.
+    */
+    private InventoryDbHelper mOpenHelper;
 
     @Override
     public boolean onCreate() {
@@ -147,10 +147,22 @@ public class InventoryProvider extends ContentProvider {
 
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 
+        //get the image uri of the product we are deleting
+        Cursor cursor = db.query(ProductEntry.TABLE_NAME, new String[]{ProductEntry.COLUMN_NAME_IMAGE}, selection, selectionArgs, null, null, null);
+        String imageUri = null;
+        if (cursor.moveToNext())
+            imageUri = cursor.getString(cursor.getColumnIndexOrThrow(ProductEntry.COLUMN_NAME_IMAGE));
+
         int rows = db.delete(ProductEntry.TABLE_NAME, selection, selectionArgs);
         if (rows > 0) {
             getContext().getContentResolver().notifyChange(uri, null);
+
+            //if the row was deleted we can also delete the image file
+            File file = new File(Uri.parse(imageUri).getPath());
+            file.delete();
         }
+
+        cursor.close();
         return rows;
     }
 
