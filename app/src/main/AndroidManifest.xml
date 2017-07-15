@@ -23,8 +23,6 @@
             android:exported="false" />
 
         <activity android:name=".DetailActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
