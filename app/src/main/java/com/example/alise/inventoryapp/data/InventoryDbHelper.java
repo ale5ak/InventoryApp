@@ -19,10 +19,10 @@ public class InventoryDbHelper extends SQLiteOpenHelper {
 
             "CREATE TABLE " + ProductEntry.TABLE_NAME + " (" +
 
-                    ProductEntry._ID +                      " INTEGER PRIMARY KEY," +
-                    ProductEntry.COLUMN_NAME_TITLE +        " TEXT NOT NULL," +
-                    ProductEntry.COLUMN_NAME_PRICE +        " INT NOT NULL," +
-                    ProductEntry.COLUMN_NAME_MATERIAL +     " TEXT NOT NULL," +
+                    ProductEntry._ID + " INTEGER PRIMARY KEY," +
+                    ProductEntry.COLUMN_NAME_TITLE + " TEXT NOT NULL," +
+                    ProductEntry.COLUMN_NAME_PRICE + " INT NOT NULL," +
+                    ProductEntry.COLUMN_NAME_MATERIAL + " TEXT NOT NULL," +
                     ProductEntry.COLUMN_NAME_QUANTITY + " INT NOT NULL," +
                     ProductEntry.COLUMN_NAME_IMAGE + " TEXT NOT NULL)";
 

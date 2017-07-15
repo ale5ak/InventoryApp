@@ -54,7 +54,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         final int quantity = mDataset.getInt(mQuantityColumn);
         final int id = mDataset.getInt(mIdColumn);
 
-        holder.mItemTitleTV.setText(title.substring(0,1).toUpperCase() + title.substring(1));
+        holder.mItemTitleTV.setText(title.substring(0, 1).toUpperCase() + title.substring(1));
         holder.mItemPriceTV.setText(holder.itemView.getResources().getString(R.string.price, price));
         holder.mItemtQuantityTV.setText(holder.itemView.getResources().getString(R.string.quantity, quantity));
 
@@ -91,6 +91,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         return mDataset.getCount();
     }
 
+    public void swap(Cursor data) {
+        if (mDataset != null) mDataset.close();
+        mDataset = data;
+        mDataset.setNotificationUri(mContext.getContentResolver(), InventoryContract.ProductEntry.PRODUCTS_URI);
+        mTitleColumn = mDataset.getColumnIndexOrThrow(InventoryContract.ProductEntry.COLUMN_NAME_TITLE);
+        mPriceColumn = mDataset.getColumnIndexOrThrow(InventoryContract.ProductEntry.COLUMN_NAME_PRICE);
+        mQuantityColumn = mDataset.getColumnIndexOrThrow(InventoryContract.ProductEntry.COLUMN_NAME_QUANTITY);
+        mIdColumn = mDataset.getColumnIndexOrThrow(InventoryContract.ProductEntry._ID);
+        notifyDataSetChanged();
+    }
+
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
@@ -106,16 +117,5 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             mItemtQuantityTV = v.findViewById(R.id.tv_item_quantity);
             mSaleButton = v.findViewById(R.id.bt_sale);
         }
-    }
-
-    public void swap(Cursor data) {
-        if (mDataset != null) mDataset.close();
-        mDataset = data;
-        mDataset.setNotificationUri(mContext.getContentResolver(), InventoryContract.ProductEntry.PRODUCTS_URI);
-        mTitleColumn = mDataset.getColumnIndexOrThrow(InventoryContract.ProductEntry.COLUMN_NAME_TITLE);
-        mPriceColumn = mDataset.getColumnIndexOrThrow(InventoryContract.ProductEntry.COLUMN_NAME_PRICE);
-        mQuantityColumn = mDataset.getColumnIndexOrThrow(InventoryContract.ProductEntry.COLUMN_NAME_QUANTITY);
-        mIdColumn = mDataset.getColumnIndexOrThrow(InventoryContract.ProductEntry._ID);
-        notifyDataSetChanged();
     }
 }

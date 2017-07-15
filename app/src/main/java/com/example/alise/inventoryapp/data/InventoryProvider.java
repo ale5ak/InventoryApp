@@ -99,8 +99,7 @@ public class InventoryProvider extends ContentProvider {
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 
         //Check if the same item isn't already in the table
-        String selection =
-                ProductEntry.COLUMN_NAME_TITLE + "=? AND " +
+        String selection = ProductEntry.COLUMN_NAME_TITLE + "=? AND " +
                 ProductEntry.COLUMN_NAME_PRICE + "=? AND " +
                 ProductEntry.COLUMN_NAME_MATERIAL + "=?";
 

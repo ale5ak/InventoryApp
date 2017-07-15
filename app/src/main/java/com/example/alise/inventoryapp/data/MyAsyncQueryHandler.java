@@ -3,13 +3,10 @@ package com.example.alise.inventoryapp.data;
 import android.content.AsyncQueryHandler;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.database.Cursor;
 import android.net.Uri;
 import android.widget.Toast;
 
 import com.example.alise.inventoryapp.R;
-
-import java.lang.reflect.Array;
 
 /**
  * Created by Aleš Pros on 14.07.2017.
