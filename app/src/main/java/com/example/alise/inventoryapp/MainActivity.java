@@ -90,6 +90,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mAdapter.swap(data);
+        if (data.getCount() == 0) {
+            findViewById(R.id.empty_view).setVisibility(View.VISIBLE);
+        } else {
+            findViewById(R.id.empty_view).setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
