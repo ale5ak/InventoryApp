@@ -1,27 +1,44 @@
 package com.example.alise.inventoryapp;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.alise.inventoryapp.data.InventoryContract;
 import com.example.alise.inventoryapp.data.MyAsyncQueryHandler;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+    static final int REQUEST_TAKE_PHOTO = 1;
+    private ImageView mProductImageIV;
     private TextView mIdLabelTV, mIdValueTV;
     private EditText mTitleET, mPriceET, mMaterialET, mQuantityET;
     private int mQuantityInt;
@@ -29,6 +46,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     private MyAsyncQueryHandler mMyAsyncQueryHandler;
     private Uri mUri;
     private boolean mIsNewProduct;
+    private Uri mPhotoUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +67,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             findViewById(R.id.bt_detail_delete).setVisibility(View.GONE);
         }
 
+        mProductImageIV = (ImageView) findViewById(R.id.iv_detail_image);
         mIdLabelTV = (TextView) findViewById(R.id.tv_detail_id_label);
         mIdValueTV = (TextView) findViewById(R.id.tv_detail_id_value);
         mTitleET = (EditText) findViewById(R.id.et_detail_title);
@@ -57,6 +76,17 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         mQuantityET = (EditText) findViewById(R.id.et_detail_quantity);
 
         mQuantityET.addTextChangedListener(new MyTextWatcher());
+
+        mProductImageIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (shouldAskPermissions()) {
+                    askPermissions();
+                } else {
+                    dispatchTakePictureIntent();
+                }
+            }
+        });
 
         String quantityString = mQuantityET.getText().toString();
         mQuantityInt = Integer.parseInt(quantityString);
@@ -188,6 +218,88 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            mProductImageIV.setImageURI(mPhotoUri);
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+
+        String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath();
+        String path = "/InventoryApp/Pictures";
+        File dir = new File(baseDir + path);
+        dir.mkdirs();
+
+        File image = File.createTempFile(
+                imageFileName,   //prefix
+                ".jpg",          //suffix
+                dir              //directory
+        );
+
+        // Save a file: uri
+        mPhotoUri = Uri.fromFile(image);
+        return image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                Log.d("inventoryapp", "Error with creating the file: " + ex);
+            }
+
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoUri);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+        }
+    }
+
+    protected boolean shouldAskPermissions() {
+        return (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1);
+    }
+
+    @TargetApi(23)
+    protected void askPermissions() {
+        ActivityCompat.requestPermissions(DetailActivity.this,
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                200);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 200: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission was granted.
+                    dispatchTakePictureIntent();
+
+                } else {
+                    // Permission denied.
+                    Toast.makeText(DetailActivity.this, getString(R.string.permission_external_storage_write), Toast.LENGTH_LONG).show();
+                }
+
+                break;
+            }
+        }
+    }
+
     public class MyTextWatcher implements TextWatcher{
 
         @Override
@@ -214,5 +326,4 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             }
         }
     }
-
 }
