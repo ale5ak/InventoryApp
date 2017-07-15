@@ -13,12 +13,14 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.alise.inventoryapp.data.InventoryContract;
 import com.example.alise.inventoryapp.data.MyAsyncQueryHandler;
 
 public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+    private TextView mIdLabelTV, mIdValueTV;
     private EditText mTitleET, mPriceET, mMaterialET, mQuantityET;
     private int mQuantityInt;
     private Toast errorQuantityBiggerThan1;
@@ -44,6 +46,8 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             mIsNewProduct = true;
         }
 
+        mIdLabelTV = (TextView) findViewById(R.id.tv_detail_id_label);
+        mIdValueTV = (TextView) findViewById(R.id.tv_detail_id_value);
         mTitleET = (EditText) findViewById(R.id.et_detail_title);
         mPriceET = (EditText) findViewById(R.id.et_detail_price);
         mMaterialET = (EditText) findViewById(R.id.et_detail_material);
@@ -144,15 +148,22 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data.moveToNext()) {
+            String id = data.getString(data.getColumnIndexOrThrow(InventoryContract.ProductEntry._ID));
             String title = data.getString(data.getColumnIndexOrThrow(InventoryContract.ProductEntry.COLUMN_NAME_TITLE));
             String price = data.getString(data.getColumnIndexOrThrow(InventoryContract.ProductEntry.COLUMN_NAME_PRICE));
             String material = data.getString(data.getColumnIndexOrThrow(InventoryContract.ProductEntry.COLUMN_NAME_MATERIAL));
             String quantity = data.getString(data.getColumnIndexOrThrow(InventoryContract.ProductEntry.COLUMN_NAME_QUANTITY));
 
+            mIdLabelTV.setVisibility(View.VISIBLE);
+            mIdValueTV.setText(id);
+            mIdValueTV.setVisibility(View.VISIBLE);
+
             mTitleET.setText(title);
             mPriceET.setText(price);
             mMaterialET.setText(material);
             mQuantityET.setText(quantity);
+
+            mQuantityInt = Integer.parseInt(quantity);
         }
 
         data.close();

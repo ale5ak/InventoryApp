@@ -29,4 +29,5 @@
     </string>
     <string name="order_subject">Order</string>
     <string name="one">1</string>
+    <string name="tv_detail_identifier">ID:</string>
 </resources>
