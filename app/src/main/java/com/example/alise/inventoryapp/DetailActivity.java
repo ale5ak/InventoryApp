@@ -46,7 +46,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     private MyAsyncQueryHandler mMyAsyncQueryHandler;
     private Uri mUri;
     private boolean mIsNewProduct;
-    private Uri mImageUri;
+    private Uri mImageUri, mTempImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,6 +229,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            mImageUri = mTempImageUri;
             mProductImageIV.setImageURI(mImageUri);
         }
     }
@@ -250,7 +251,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         );
 
         // Save a file: uri
-        mImageUri = Uri.fromFile(image);
+        mTempImageUri = Uri.fromFile(image);
         return image;
     }
 
@@ -271,7 +272,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mTempImageUri);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
         }
