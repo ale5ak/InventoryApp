@@ -6,27 +6,27 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:layout_marginBottom="4dp"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
-    android:layout_marginTop="4dp"
-    card_view:cardCornerRadius="4dp">
+    android:layout_marginBottom="@dimen/list_item_padding_margin_small"
+    android:layout_marginLeft="@dimen/list_item_padding_margin_medium"
+    android:layout_marginRight="@dimen/list_item_padding_margin_medium"
+    android:layout_marginTop="@dimen/list_item_padding_margin_small"
+    card_view:cardCornerRadius="@dimen/list_item_padding_margin_small">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:padding="@dimen/list_item_padding_margin_medium">
 
         <TextView
             android:id="@+id/tv_item_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginLeft="@dimen/list_item_padding_margin_medium"
+            android:layout_marginStart="@dimen/list_item_padding_margin_medium"
+            android:layout_marginTop="@dimen/list_item_padding_margin_medium"
             android:textColor="@android:color/black"
-            android:textSize="22sp"
+            android:textSize="@dimen/list_item_title_text_size"
             card_view:layout_constraintLeft_toLeftOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
             tools:text="T-shirt" />
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="0dp"
             android:layout_marginStart="0dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/list_item_padding_margin_medium"
             card_view:layout_constraintLeft_toLeftOf="@+id/tv_item_title"
             card_view:layout_constraintTop_toBottomOf="@+id/tv_item_title"
             tools:text="Price: $100" />
@@ -46,10 +46,10 @@
             android:id="@+id/tv_item_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="@dimen/list_item_padding_margin_large"
             android:layout_marginLeft="0dp"
             android:layout_marginStart="0dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/list_item_padding_margin_medium"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintLeft_toLeftOf="@+id/tv_item_price"
             card_view:layout_constraintTop_toBottomOf="@+id/tv_item_price"
@@ -59,8 +59,8 @@
             android:id="@+id/bt_sale"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="@dimen/list_item_padding_margin_medium"
+            android:layout_marginRight="@dimen/list_item_padding_margin_medium"
             android:layout_marginTop="0dp"
             android:text="@string/button_sale_label"
             card_view:layout_constraintRight_toRightOf="parent"
