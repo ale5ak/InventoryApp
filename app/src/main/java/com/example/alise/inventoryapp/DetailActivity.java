@@ -82,6 +82,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         } else {
             mIsNewProduct = true;
             findViewById(R.id.bt_detail_delete).setVisibility(View.GONE);
+            mQuantityInt = -1;
         }
 
         mProductImageIV = (ImageView) findViewById(R.id.iv_detail_image);
@@ -105,24 +106,27 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             }
         });
 
-        String quantityString = mQuantityET.getText().toString();
-        mQuantityInt = Integer.parseInt(quantityString);
-
         mMyAsyncQueryHandler = new MyAsyncQueryHandler(getContentResolver(), this);
     }
 
     public void reduceQuantity(View view) {
         if (mQuantityInt > 0) {
-            String quantityFinal = String.valueOf(--mQuantityInt);
-            mQuantityET.setText(quantityFinal);
-        } else {
+            mQuantityET.setText(String.valueOf(--mQuantityInt));
+        } else if (mQuantityInt == 0) {
             errorQuantityNegative.show();
+        } else {
+            mQuantityInt = 0;
+            mQuantityET.setText(String.valueOf(mQuantityInt));
         }
     }
 
     public void addQuantity(View view) {
-        String quantityFinal = String.valueOf(++mQuantityInt);
-        mQuantityET.setText(quantityFinal);
+        if (mQuantityInt == -1) {
+            mQuantityInt = 1;
+            mQuantityET.setText(String.valueOf(mQuantityInt));
+        } else {
+            mQuantityET.setText(String.valueOf(++mQuantityInt));
+        }
     }
 
     public void orderFromTheSupplier(View view) {
@@ -392,7 +396,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         public void afterTextChanged(Editable editable) {
             String quantityString = editable.toString();
             if (quantityString.isEmpty()) {
-                mQuantityInt = 0;
+                mQuantityInt = -1;
                 return;
             }
 

@@ -163,7 +163,6 @@
                 android:layout_marginStart="@dimen/detail_text_left_right_top_bottom"
                 android:layout_marginTop="@dimen/detail_text_left_right_top_bottom"
                 android:inputType="number"
-                android:text="@string/zero"
                 android:textAlignment="center"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toRightOf="@+id/bt_detail_quantity_remove"
