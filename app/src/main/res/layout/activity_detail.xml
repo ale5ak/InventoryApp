@@ -145,11 +145,13 @@
                 android:id="@+id/bt_detail_quantity_remove"
                 android:layout_width="@dimen/detail_button_width"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/detail_button_margin_top_bottom"
+                android:layout_marginLeft="0dp"
+                android:layout_marginStart="0dp"
                 android:onClick="reduceQuantity"
                 android:text="@string/bt_detail_minus_sign"
+                app:layout_constraintBottom_toBottomOf="@+id/et_detail_quantity"
                 app:layout_constraintLeft_toLeftOf="@+id/et_detail_material"
-                app:layout_constraintTop_toBottomOf="@+id/et_detail_material" />
+                app:layout_constraintTop_toTopOf="@+id/et_detail_quantity" />
 
             <EditText
                 android:id="@+id/et_detail_quantity"
@@ -159,14 +161,14 @@
                 android:layout_marginLeft="@dimen/detail_text_left_right_top_bottom"
                 android:layout_marginRight="@dimen/detail_text_left_right_top_bottom"
                 android:layout_marginStart="@dimen/detail_text_left_right_top_bottom"
+                android:layout_marginTop="@dimen/detail_text_left_right_top_bottom"
                 android:inputType="number"
                 android:text="@string/one"
                 android:textAlignment="center"
-                app:layout_constraintBottom_toBottomOf="@+id/bt_detail_quantity_remove"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toRightOf="@+id/bt_detail_quantity_remove"
                 app:layout_constraintRight_toLeftOf="@+id/bt_detail_quantity_add"
-                app:layout_constraintTop_toTopOf="@+id/bt_detail_quantity_remove" />
+                app:layout_constraintTop_toBottomOf="@+id/et_detail_material" />
 
             <Button
                 android:id="@+id/bt_detail_quantity_add"
