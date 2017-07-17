@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.alise.inventoryapp.data.InventoryContract;
 import com.example.alise.inventoryapp.data.MyAsyncQueryHandler;
@@ -62,12 +63,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             @Override
             public void onClick(final View view) {
                 Uri uri = InventoryContract.ProductEntry.PRODUCTS_URI.buildUpon().appendPath(String.valueOf(id)).build();
-                if (quantity >= 2) {
+                if (quantity > 0) {
                     ContentValues contentValues = new ContentValues();
                     contentValues.put(InventoryContract.ProductEntry.COLUMN_NAME_QUANTITY, quantity - 1);
                     mMyAsyncQueryHandler.startUpdate(0, title, uri, contentValues, null, null);
                 } else {
-                    mMyAsyncQueryHandler.startDelete(0, title, uri, null, null);
+                    Toast.makeText(mContext, mContext.getString(R.string.error_quantity_negative), Toast.LENGTH_SHORT).show();
                 }
             }
         });

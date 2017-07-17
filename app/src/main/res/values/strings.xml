@@ -17,7 +17,7 @@
     <string name="bt_detail_order">Order from the supplier</string>
     <string name="bt_detail_delete">Delete</string>
     <string name="bt_detail_save">Save</string>
-    <string name="error_quantity_bigger_than_0">The quantity must be larger than 0.</string>
+    <string name="error_quantity_negative">The quantity can\'t be negative.</string>
     <string name="error_all_fields_must_be_filled">Please, fill up all the fields to continue.</string>
     <string name="order_text">
         Hi,

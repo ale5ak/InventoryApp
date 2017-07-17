@@ -70,7 +70,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        errorQuantityBiggerThan1 = Toast.makeText(this, getString(R.string.error_quantity_bigger_than_0), Toast.LENGTH_LONG);
+        errorQuantityBiggerThan1 = Toast.makeText(this, getString(R.string.error_quantity_negative), Toast.LENGTH_LONG);
 
         Intent intentThatStartedThisActivity = getIntent();
         int id = intentThatStartedThisActivity.getIntExtra("id", -1);

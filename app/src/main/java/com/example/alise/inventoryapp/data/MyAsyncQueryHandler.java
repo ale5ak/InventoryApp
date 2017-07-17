@@ -42,9 +42,7 @@ public class MyAsyncQueryHandler extends AsyncQueryHandler {
     protected void onDeleteComplete(int token, Object cookie, int result) {
         //super.onDeleteComplete(token, cookie, result);
         if (result > 0) {
-            if (token == 0) {
-                Toast.makeText(mContext, mContext.getString(R.string.row_deleted, cookie), Toast.LENGTH_SHORT).show();
-            } else if (token == 1) {
+            if (token == 1) {
                 Toast.makeText(mContext, mContext.getString(R.string.product_deleted, cookie), Toast.LENGTH_SHORT).show();
             }
         }
