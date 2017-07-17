@@ -45,7 +45,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mTitleET, mPriceET, mMaterialET, mQuantityET;
 
     private int mQuantityInt;
-    private Toast errorQuantityBiggerThan1;
+    private Toast errorQuantityNegative;
 
     private MyAsyncQueryHandler mMyAsyncQueryHandler;
     private Uri mProductItemUri;
@@ -70,7 +70,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        errorQuantityBiggerThan1 = Toast.makeText(this, getString(R.string.error_quantity_negative), Toast.LENGTH_LONG);
+        errorQuantityNegative = Toast.makeText(this, getString(R.string.error_quantity_negative), Toast.LENGTH_LONG);
 
         Intent intentThatStartedThisActivity = getIntent();
         int id = intentThatStartedThisActivity.getIntExtra("id", -1);
@@ -112,11 +112,11 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     public void reduceQuantity(View view) {
-        if (mQuantityInt > 1) {
+        if (mQuantityInt > 0) {
             String quantityFinal = String.valueOf(--mQuantityInt);
             mQuantityET.setText(quantityFinal);
         } else {
-            errorQuantityBiggerThan1.show();
+            errorQuantityNegative.show();
         }
     }
 
@@ -392,17 +392,17 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         public void afterTextChanged(Editable editable) {
             String quantityString = editable.toString();
             if (quantityString.isEmpty()) {
-                mQuantityInt = 1;
+                mQuantityInt = 0;
                 return;
             }
 
             int quantity = Integer.parseInt(quantityString);
-            if (quantity >= 1) {
+            if (quantity >= 0) {
                 mQuantityInt = quantity;
             } else {
-                mQuantityInt = 1;
+                mQuantityInt = 0;
                 mQuantityET.setText(String.valueOf(mQuantityInt));
-                errorQuantityBiggerThan1.show();
+                errorQuantityNegative.show();
             }
         }
     }
